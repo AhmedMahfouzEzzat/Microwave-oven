@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# AvrStudio Solution File, Format Version 11.00
+Project("{D1100916-62DA-4D80-A9B4-55A1E7CCEEB3}") = "Microwave oven", "Microwave oven\Microwave oven.avrgccproj", "{C2CFB829-15F1-4D9E-BC3B-DBC5FA8D305E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C2CFB829-15F1-4D9E-BC3B-DBC5FA8D305E}.Debug|AVR.ActiveCfg = Debug|AVR
+		{C2CFB829-15F1-4D9E-BC3B-DBC5FA8D305E}.Debug|AVR.Build.0 = Debug|AVR
+		{C2CFB829-15F1-4D9E-BC3B-DBC5FA8D305E}.Release|AVR.ActiveCfg = Release|AVR
+		{C2CFB829-15F1-4D9E-BC3B-DBC5FA8D305E}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
