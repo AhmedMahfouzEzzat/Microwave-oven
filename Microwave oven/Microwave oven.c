@@ -62,11 +62,9 @@
 #define beep (peripheral_port^= (1<<bzr)) 
 
 volatile uint8_t AD_T_MODE = 0 , door_is_open = 0 ;
-<<<<<<< HEAD
+
 volatile uint8_t RT_second = 0 , RT_minutes = 0 , RT_HOURS = 0;
-=======
-volatile uint8_t RT_minutes = 0 , RT_HOURS = 0,,RT_seconds =0;
->>>>>>> 74d8a00af0222f5921954be487797f181ab3223d
+
 volatile uint8_t stop_watch_second =0 , stop_watch_minutes=0 ;
 enum PROCESS{RUN , PUSED , END , NONE};
 
@@ -94,7 +92,7 @@ void INIT_RTC()
 
 void INC_RTC()
 {
-	if (RT_seconds == 60)
+	if (RT_second == 60)
         RT_minutes++;
     if(RT_minutes ==60)
 	   RT_HOURS++;
