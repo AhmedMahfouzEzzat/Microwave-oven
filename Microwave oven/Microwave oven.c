@@ -61,7 +61,7 @@
 
 volatile uint8_t AD_T_MODE = 0 , door_is_open = 0 ;
 
-volatile uint8_t RT_second = 0 , RT_minutes = 0 , RT_HOURS = 0;
+volatile uint8_t RT_seconds = 0 , RT_minutes = 0 , RT_HOURS = 0;
 
 volatile uint8_t stop_watch_second =0 , stop_watch_minutes=0 ;
 
@@ -91,11 +91,15 @@ void INIT_RTC()
 
 void INC_RTC()
 {
-	if (RT_second == 60)
-        RT_minutes++;
+	if (RT_seconds == 60)
+       { RT_minutes++;
+		   RT_seconds=0;
+	   }		   
     if(RT_minutes ==60)
+	{
 	   RT_HOURS++;
-	
+	   RT_minutes=0;
+	}	
 }
 
 void INC_SW()
@@ -115,6 +119,7 @@ void DEC_SW()
 		 stop_watch_minutes--;
 	}
 	}
+	
 }
 
 //display 2 digit
