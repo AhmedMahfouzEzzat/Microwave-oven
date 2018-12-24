@@ -115,8 +115,11 @@ void INC_SW()
 	
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
+=======
+>>>>>>> b3c745d8ede483ec175640f2cbdb1f7f3b03d651
 void DEC_SW()
 {
 	int count=0;
