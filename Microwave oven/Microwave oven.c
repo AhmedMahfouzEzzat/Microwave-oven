@@ -55,11 +55,16 @@
 #define num_7 (1<<a|1<<b|1<<c)
 #define num_8 (1<<a|1<<b|1<<c|1<<d|1<<e|1<<f|1<<g)
 #define num_9 (1<<a|1<<b|1<<c|1<<d|1<<f|1<<g)
-	
-volatile uint8_t AD_T_MODE = 0;
-volatile uint8_t door_is_open = 0;
+#define dec_point (1<<dp)	
+
+#define beep (peripheral_port^= (1<<bzr)) 
+
+volatile uint8_t AD_T_MODE = 0 , door_is_open = 0 ;
 volatile uint8_t RT_minutes = 0 , RT_HOURS = 0;
 volatile uint8_t stop_watch_second =0 , stop_watch_minutes=0 ;
+enum PROCESS{RUN , PUSED , END , NONE};
+
+enum PROCESS MY_PROCESS ;
 
 void init_oven()
 {
@@ -68,28 +73,57 @@ void init_oven()
 	DDRD =0X00;	//BUTTONS (IN)
 	PORTD =0XFF; //TURN ON PULUP RESISTANTS
 	
+	MY_PROCESS =NONE ;
 	// INIT THE EXTERNAL INTRUPPT => INIT0 "any change ",INIT1 "FULLING adge" 
 }
 
-void beep(int duration)
-{
-	sbi(peripheral_port,bzr);
-	_delay_ms(duration);
-	cbi(peripheral_port,bzr);
-}
-void init_RTC()
-{
-	//initialize the timer1 to Make interrupt every one second to increemint RTC 
-}
-void write_to_7seg(uint8_t seg_index , uint8_t num)
+void INC_RTC()
 {
 	
 }
+
+void INC_SW()
+{
+	
+}
+void DEC_SW()
+{
+	
+}
+
+//display 2 digit
+void display(uint8_t num ,uint8_t seg1,uint8_t seg2)
+{
+	uint8_t nums[] ={num_0,num_1,num_2,num_3,num_4,num_5,num_6,num_7,num_8,num_9}
+	seven_seg_data_port =nums[(num %10)];	
+	seven_seg_addr_port =seg1;
+	num/=10;
+	seven_seg_data_port =nums[(num %10)];	
+	seven_seg_addr_port =seg2;
+}
+
+void END_PROCESS()
+{
+	/*
+	turn off Oven_indicator_led 
+	turn off twist_motor
+	chang state of procces
+	*/
+}
+
+void START_PROCESS()
+{
+	/*
+	turn on Oven_indicator_led 
+	turn on twist_motor
+	chang state of procces
+	*/
+}
+
 void SYSTEM_PUSE()
 {
 	//TURN MOTOR OF 
 	//pose stop watch timer 
-	//dsplay RTC 
 }
 int main(void)
 {
@@ -122,6 +156,18 @@ ISR(INT1_vect)
 
 ISR(INT0_vect)
 {
-	//DOOR IS OPEN
-	door_is_open = 1;
+	/*
+	DOOR IS OPEN or CLOSED 
+	toggle  state of door
+	door_is_open = ! door_is_open;
+	if PROCESS END => chang stat to NONE
+	*/
+}
+
+ISR(TIMER1_OVF_vect)
+{
+	INC_RTC
+	if PROCESS RUN => DEC_SW 
+	if PROCESS END => beep
+	
 }
