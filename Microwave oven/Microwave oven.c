@@ -79,18 +79,22 @@ void init_oven()
 	MY_PROCESS =NONE ;
 	
 	// INIT THE EXTERNAL INTRUPPT => INIT0 "any change ",INIT1 "FULLING adge" 
-	MCUCR |= (1<<ISC00)|(1<<ISC11);
+	MCUCR |= (1<<ISC00)|(1<<ISC11); 
 	GICR |= (1<<INT0)|(1<<INT1);
 	
 }
 void INIT_RTC()
 {
-	
+	TCNT1 = -15625;
+	TCCR1A = 0;
+	TCCR1B = 5; // prescaling  clk/1024
 	sbi( TIMSK ,TOIE1);
 }
 
 void INC_RTC()
 {
+	RT_seconds++;
+	
 	if (RT_seconds == 60)
        { RT_minutes++;
 		   RT_seconds=0;
@@ -104,14 +108,16 @@ void INC_RTC()
 
 void INC_SW()
 {
+	stop_watch_second++;
 	if (stop_watch_second == 60)
 	    stop_watch_minutes++;
 	
 }
 void DEC_SW()
 {
+	/*
 	int count=0;
-	while ((stop_watch_minutes *60)--)
+	while ((uint8_t)(stop_watch_minutes * 60)--)
 	{
 		 count++;
 	if (count ==60)
@@ -119,7 +125,7 @@ void DEC_SW()
 		 stop_watch_minutes--;
 	}
 	}
-	
+	*/
 }
 
 //display 2 digit
@@ -180,13 +186,12 @@ void SYSTEM_PUSE()
 	//pose stop watch timer
 	MY_PROCESS = PUSED;
 }
+
 int main(void)
 {
 	sei();
 	init_oven();
 	INIT_RTC();
-	
-	
     while(1)
     {
 		
@@ -229,4 +234,7 @@ ISR(TIMER1_OVF_vect)
 	if PROCESS RUN => DEC_SW 
 	if PROCESS END => beep
 	*/
+	
+	TCNT1 = -15625;
+	
 }
