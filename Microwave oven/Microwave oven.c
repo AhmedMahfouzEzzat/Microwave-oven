@@ -104,26 +104,33 @@ void display(uint8_t num ,uint8_t seg1,uint8_t seg2)
 
 void END_PROCESS()
 {
-	/*
-	turn off Oven_indicator_led 
-	turn off twist_motor
-	chang state of procces
-	*/
+	//turn off Oven_indicator_led 
+	cbi(peripheral_port,Oven_indicator_led);
+	//turn off twist_motor
+	cbi(peripheral_port,twist_motor);
+	//	chang state of procces
+	MY_PROCESS=END;
 }
 
 void START_PROCESS()
 {
-	/*
-	turn on Oven_indicator_led 
-	turn on twist_motor
-	chang state of procces
-	*/
+	
+	//turn on Oven_indicator_led 
+	sbi(peripheral_port,Oven_indicator_led);
+	//turn on twist_motor
+	sbi(peripheral_port,twist_motor);	
+	//chang state of procces
+	MY_PROCESS =RUN;
+	
+
 }
 
 void SYSTEM_PUSE()
 {
 	//TURN MOTOR OF 
-	//pose stop watch timer 
+	cbi(peripheral_port,twist_motor);	
+	//pose stop watch timer
+	MY_PROCESS = PUSED;
 }
 int main(void)
 {
