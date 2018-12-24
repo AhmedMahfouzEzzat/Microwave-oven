@@ -80,10 +80,14 @@ void init_oven()
 void INC_RTC()
 {
 	if (RT_seconds == 60)
-        RT_minutes++;
+       { RT_minutes++;
+		   RT_seconds=0;
+	   }		   
     if(RT_minutes ==60)
+	{
 	   RT_HOURS++;
-	
+	   RT_minutes=0;
+	}	
 }
 
 void INC_SW()
@@ -103,6 +107,7 @@ void DEC_SW()
 		 stop_watch_minutes--;
 	}
 	}
+	
 }
 
 //display 2 digit
