@@ -60,7 +60,7 @@
 #define beep (peripheral_port^= (1<<bzr)) 
 
 volatile uint8_t AD_T_MODE = 0 , door_is_open = 0 ;
-volatile uint8_t RT_minutes = 0 , RT_HOURS = 0;
+volatile uint8_t RT_minutes = 0 , RT_HOURS = 0,,RT_seconds =0;
 volatile uint8_t stop_watch_second =0 , stop_watch_minutes=0 ;
 enum PROCESS{RUN , PUSED , END , NONE};
 
@@ -79,16 +79,30 @@ void init_oven()
 
 void INC_RTC()
 {
+	if (RT_seconds == 60)
+        RT_minutes++;
+    if(RT_minutes ==60)
+	   RT_HOURS++;
 	
 }
 
 void INC_SW()
 {
+	if (stop_watch_second ==60)
+	    stop_watch_minutes++;
 	
 }
 void DEC_SW()
 {
-	
+	int count=0;
+	while ((stop_watch_minutes*60)--)
+	{
+		 count++;
+	if (count ==60)
+	{
+		 stop_watch_minutes--;
+	}
+	}
 }
 
 //display 2 digit
