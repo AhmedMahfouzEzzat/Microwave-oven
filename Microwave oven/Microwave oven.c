@@ -45,6 +45,8 @@
 #define sbi(port,bit) (port) |= (1 << (bit)) 
 #define cbi(port,bit) (port) &= ~(1 << (bit)) 
 
+#define beep() (peripheral_port^= (1<<bzr)) 
+
 #define num_0 (1<<a|1<<b|1<<c|1<<d|1<<e|1<<f)
 #define num_1 (1<<b|1<<c)
 #define num_2 (1<<a|1<<b|1<<g|1<<e|1<<d)
@@ -75,6 +77,14 @@ void init_oven()
 	
 	MY_PROCESS =NONE ;
 	// INIT THE EXTERNAL INTRUPPT => INIT0 "any change ",INIT1 "FULLING adge" 
+	MCUCR |= (1<<ISC00)|(1<<ISC11);
+	GICR |= (1<<INT0)|(1<<INT1);
+	
+}
+void INIT_RTC()
+{
+	
+	sbi( TIMSK ,TOIE1);
 }
 
 void INC_RTC()
@@ -92,16 +102,28 @@ void DEC_SW()
 }
 
 //display 2 digit
-void display(uint8_t num ,uint8_t seg1,uint8_t seg2)
+void display_2_digit(uint8_t num ,uint8_t seg1,uint8_t seg2)
 {
-	uint8_t nums[] ={num_0,num_1,num_2,num_3,num_4,num_5,num_6,num_7,num_8,num_9}
-	seven_seg_data_port =nums[(num %10)];	
-	seven_seg_addr_port =seg1;
-	num/=10;
+	uint8_t nums[] ={num_0,num_1,num_2,num_3,num_4,num_5,num_6,num_7,num_8,num_9};
 	seven_seg_data_port =nums[(num %10)];	
 	seven_seg_addr_port =seg2;
+	num/=10;
+	seven_seg_data_port =nums[(num %10)];
+	if(seg2 == s2)  sbi(seven_seg_data_port,dp); 
+	seven_seg_addr_port =seg1;
 }
 
+void display_rtc()
+{
+	display_2_digit(RT_HOURS,s1,s2);
+	display_2_digit(RT_minutes,s3,s4);
+}
+
+void display_sw()
+{
+	display_2_digit(stop_watch_minutes,s1,s2);
+	display_2_digit(stop_watch_second,s3,s4);
+}
 void END_PROCESS()
 {
 	/*
@@ -129,7 +151,7 @@ int main(void)
 {
 	sei();
 	init_oven();
-	init_RTC();
+	INIT_RTC();
     while(1)
     {
 		if (AD_T_MODE)
@@ -166,8 +188,9 @@ ISR(INT0_vect)
 
 ISR(TIMER1_OVF_vect)
 {
+	/*
 	INC_RTC
 	if PROCESS RUN => DEC_SW 
 	if PROCESS END => beep
-	
+	*/
 }
