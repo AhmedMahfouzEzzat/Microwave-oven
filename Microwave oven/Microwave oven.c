@@ -45,8 +45,6 @@
 #define sbi(port,bit) (port) |= (1 << (bit)) 
 #define cbi(port,bit) (port) &= ~(1 << (bit)) 
 
-#define beep() (peripheral_port^= (1<<bzr)) 
-
 #define num_0 ~(1<<a|1<<b|1<<c|1<<d|1<<e|1<<f)
 #define num_1 ~(1<<b|1<<c)
 #define num_2 ~(1<<a|1<<b|1<<g|1<<e|1<<d)
@@ -66,6 +64,7 @@ volatile uint8_t AD_T_MODE = 0 , door_is_open = 0 ;
 volatile uint8_t RT_second = 0 , RT_minutes = 0 , RT_HOURS = 0;
 
 volatile uint8_t stop_watch_second =0 , stop_watch_minutes=0 ;
+
 enum PROCESS{RUN , PUSED , END , NONE};
 
 enum PROCESS MY_PROCESS ;
@@ -101,14 +100,14 @@ void INC_RTC()
 
 void INC_SW()
 {
-	if (stop_watch_second ==60)
+	if (stop_watch_second == 60)
 	    stop_watch_minutes++;
 	
 }
 void DEC_SW()
 {
 	int count=0;
-	while ((stop_watch_minutes*60)--)
+	while ((stop_watch_minutes *60)--)
 	{
 		 count++;
 	if (count ==60)
@@ -189,10 +188,10 @@ int main(void)
 		/*if (AD_T_MODE)
 		{
 			/////////////////////////////////////////////////////////////////
-			if pls_ten_bn pressed => increment stop watch time
-			if start_bn pressed => initialize the STOP WATCH TIMER ,START Process
-			if cancel_bn pressed firist time => pause the stop watch timer
-			else if presed second time => make the timer = 0 ;
+			//if pls_ten_bn pressed => increment stop watch time
+			//if start_bn pressed => initialize the STOP WATCH TIMER ,START Process
+			//if cancel_bn pressed firist time => pause the stop watch timer
+			//else if presed second time => make the timer = 0 ;
 			//////////////////////////////////////////////////////////////////
 		}
 		else
