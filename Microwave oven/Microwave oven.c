@@ -61,7 +61,7 @@
 
 volatile uint8_t AD_T_MODE = 0 , door_is_open = 0 ;
 
-volatile uint8_t RT_seconds = 0 , RT_minutes = 0 , RT_HOURS = 0;
+volatile uint8_t RT_seconds = 0 , RT_minutes = 0,Min=60 , RT_HOURS = 0;
 
 volatile uint8_t stop_watch_second =0 , stop_watch_minutes=0 ;
 
@@ -111,15 +111,15 @@ void INC_SW()
 void DEC_SW()
 {
 	int count=0;
-	while ((stop_watch_minutes *60)--)
+	volatile uint8_t min_to_sec = stop_watch_minutes*Min;
+	while (min_to_sec--)
 	{
 		 count++;
-	if (count ==60)
-	{
+	  if (count ==60)
+	    {
 		 stop_watch_minutes--;
+		}	    
 	}
-	}
-	
 }
 
 //display 2 digit
