@@ -57,7 +57,7 @@
 #define num_9 ~(1<<a|1<<b|1<<c|1<<d|1<<f|1<<g)
 
 
-#define beep (peripheral_port^= (1<<bzr)) 
+#define beep() (peripheral_port^= (1<<bzr)) 
 
 volatile uint8_t AD_T_MODE = 0 , door_is_open = 0 ;
 
@@ -91,11 +91,9 @@ void INIT_RTC()
 	sbi( TIMSK ,TOIE1);
 }
 
-
-
-
 void INC_RTC()
 {
+	RT_seconds++;
 	if (RT_seconds == 60)
        { 
 		   RT_minutes++;
@@ -110,16 +108,15 @@ void INC_RTC()
 
 void INC_SW()
 {
+	stop_watch_second++;
 	if (stop_watch_second ==60)
+	{
 	    stop_watch_minutes++;
+		stop_watch_second =0 ;
+	}		
 	
 }
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
-=======
->>>>>>> b3c745d8ede483ec175640f2cbdb1f7f3b03d651
 void DEC_SW()
 {
 	int count=0;
@@ -134,7 +131,6 @@ void DEC_SW()
 	}
 	
 }
->>>>>>> b3c745d8ede483ec175640f2cbdb1f7f3b03d651
 
 //display 2 digit
 void display_2_digit(uint8_t num ,uint8_t seg1,uint8_t seg2)
@@ -242,8 +238,8 @@ ISR(TIMER1_OVF_vect)
 	if PROCESS END => beep
 	*/
 	INC_RTC();
-	if(PROCESS == RUN) { /*dec_stopwatch */}
-	if(PROCESS == END) beep();
+	if(MY_PROCESS == RUN) { /*dec_stopwatch */}
+	if(MY_PROCESS == END) beep();
 	TCNT1 = -15625;
 	
 }
