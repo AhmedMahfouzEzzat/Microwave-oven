@@ -61,7 +61,7 @@
 
 volatile uint8_t AD_T_MODE = 0 , door_is_open = 0 ;
 
-volatile uint8_t RT_seconds = 0 , RT_minutes = 0 , RT_HOURS = 0;
+volatile uint8_t RT_seconds = 0 , RT_minutes = 0 ,Min=60, RT_HOURS = 0;
 
 volatile uint8_t stop_watch_second =0 , stop_watch_minutes=0 ;
 
@@ -91,12 +91,14 @@ void INIT_RTC()
 	sbi( TIMSK ,TOIE1);
 }
 
+
+
+
 void INC_RTC()
 {
-	RT_seconds++;
-	
 	if (RT_seconds == 60)
-       { RT_minutes++;
+       { 
+		   RT_minutes++;
 		   RT_seconds=0;
 	   }		   
     if(RT_minutes ==60)
@@ -108,27 +110,28 @@ void INC_RTC()
 
 void INC_SW()
 {
-	stop_watch_second++;
-	if (stop_watch_second == 60)
+	if (stop_watch_second ==60)
 	    stop_watch_minutes++;
 	
 }
+<<<<<<< HEAD
+
+=======
 void DEC_SW()
 {
-<<<<<<< HEAD
-=======
 	int count=0;
-	while ((stop_watch_minutes *60)--)
+	volatile uint8_t min_to_sec = stop_watch_minutes*Min;
+	while (min_to_sec--)
 	{
 		 count++;
-	if (count ==60)
-	{
+	  if (count ==60)
+	    {
 		 stop_watch_minutes--;
+		}	    
 	}
-	}
->>>>>>> parent of aa013cf... error fixed in DEC_SW()
 	
 }
+>>>>>>> b3c745d8ede483ec175640f2cbdb1f7f3b03d651
 
 //display 2 digit
 void display_2_digit(uint8_t num ,uint8_t seg1,uint8_t seg2)
@@ -197,7 +200,7 @@ int main(void)
     while(1)
     {
 		
-		/*if (AD_T_MODE)
+		if (AD_T_MODE)
 		{
 			/////////////////////////////////////////////////////////////////
 			//if pls_ten_bn pressed => increment stop watch time
@@ -210,7 +213,6 @@ int main(void)
 		{
 			
 		}
-		*/
     }
 }
 ISR(INT1_vect)
@@ -236,7 +238,9 @@ ISR(TIMER1_OVF_vect)
 	if PROCESS RUN => DEC_SW 
 	if PROCESS END => beep
 	*/
-	
+	INC_RTC();
+	if(PROCESS == RUN) { /*dec_stopwatch */}
+	if(PROCESS == END) beep();
 	TCNT1 = -15625;
 	
 }
