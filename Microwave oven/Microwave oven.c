@@ -47,22 +47,26 @@
 
 #define beep() (peripheral_port^= (1<<bzr)) 
 
-#define num_0 (1<<a|1<<b|1<<c|1<<d|1<<e|1<<f)
-#define num_1 (1<<b|1<<c)
-#define num_2 (1<<a|1<<b|1<<g|1<<e|1<<d)
-#define num_3 (1<<a|1<<b|1<<c|1<<d|1<<g)
-#define num_4 (1<<b|1<<c|1<<f|1<<g)
-#define num_5 (1<<a|1<<c|1<<d|1<<f|1<<g)
-#define num_6 (1<<a|1<<c|1<<d|1<<e|1<<f|1<<g)
-#define num_7 (1<<a|1<<b|1<<c)
-#define num_8 (1<<a|1<<b|1<<c|1<<d|1<<e|1<<f|1<<g)
-#define num_9 (1<<a|1<<b|1<<c|1<<d|1<<f|1<<g)
-#define dec_point (1<<dp)	
+#define num_0 ~(1<<a|1<<b|1<<c|1<<d|1<<e|1<<f)
+#define num_1 ~(1<<b|1<<c)
+#define num_2 ~(1<<a|1<<b|1<<g|1<<e|1<<d)
+#define num_3 ~(1<<a|1<<b|1<<c|1<<d|1<<g)
+#define num_4 ~(1<<b|1<<c|1<<f|1<<g)
+#define num_5 ~(1<<a|1<<c|1<<d|1<<f|1<<g)
+#define num_6 ~(1<<a|1<<c|1<<d|1<<e|1<<f|1<<g)
+#define num_7 ~(1<<a|1<<b|1<<c)
+#define num_8 ~(1<<a|1<<b|1<<c|1<<d|1<<e|1<<f|1<<g)
+#define num_9 ~(1<<a|1<<b|1<<c|1<<d|1<<f|1<<g)
+
 
 #define beep (peripheral_port^= (1<<bzr)) 
 
 volatile uint8_t AD_T_MODE = 0 , door_is_open = 0 ;
-volatile uint8_t RT_minutes = 0 , RT_HOURS = 0;
+<<<<<<< HEAD
+volatile uint8_t RT_second = 0 , RT_minutes = 0 , RT_HOURS = 0;
+=======
+volatile uint8_t RT_minutes = 0 , RT_HOURS = 0,,RT_seconds =0;
+>>>>>>> 74d8a00af0222f5921954be487797f181ab3223d
 volatile uint8_t stop_watch_second =0 , stop_watch_minutes=0 ;
 enum PROCESS{RUN , PUSED , END , NONE};
 
@@ -76,6 +80,7 @@ void init_oven()
 	PORTD =0XFF; //TURN ON PULUP RESISTANTS
 	
 	MY_PROCESS =NONE ;
+	
 	// INIT THE EXTERNAL INTRUPPT => INIT0 "any change ",INIT1 "FULLING adge" 
 	MCUCR |= (1<<ISC00)|(1<<ISC11);
 	GICR |= (1<<INT0)|(1<<INT1);
@@ -89,28 +94,47 @@ void INIT_RTC()
 
 void INC_RTC()
 {
+	if (RT_seconds == 60)
+        RT_minutes++;
+    if(RT_minutes ==60)
+	   RT_HOURS++;
 	
 }
 
 void INC_SW()
 {
+	if (stop_watch_second ==60)
+	    stop_watch_minutes++;
 	
 }
 void DEC_SW()
 {
-	
+	int count=0;
+	while ((stop_watch_minutes*60)--)
+	{
+		 count++;
+	if (count ==60)
+	{
+		 stop_watch_minutes--;
+	}
+	}
 }
 
 //display 2 digit
 void display_2_digit(uint8_t num ,uint8_t seg1,uint8_t seg2)
 {
 	uint8_t nums[] ={num_0,num_1,num_2,num_3,num_4,num_5,num_6,num_7,num_8,num_9};
-	seven_seg_data_port =nums[(num %10)];	
-	seven_seg_addr_port =seg2;
-	num/=10;
+	sbi(seven_seg_addr_port , seg2);
 	seven_seg_data_port =nums[(num %10)];
-	if(seg2 == s2)  sbi(seven_seg_data_port,dp); 
-	seven_seg_addr_port =seg1;
+	if(seg2 == s2)  cbi(seven_seg_data_port,dp); 	
+	_delay_ms(10);
+	cbi(seven_seg_addr_port , seg2);
+	num/=10;
+	sbi(seven_seg_addr_port , seg1);
+	seven_seg_data_port =nums[(num %10)];
+	_delay_ms(10);
+	cbi(seven_seg_addr_port , seg1);
+	
 }
 
 void display_rtc()
@@ -159,22 +183,25 @@ int main(void)
 	sei();
 	init_oven();
 	INIT_RTC();
+	
+	
     while(1)
     {
-		if (AD_T_MODE)
+		
+		/*if (AD_T_MODE)
 		{
-			/*/////////////////////////////////////////////////////////////////
+			/////////////////////////////////////////////////////////////////
 			if pls_ten_bn pressed => increment stop watch time
 			if start_bn pressed => initialize the STOP WATCH TIMER ,START Process
 			if cancel_bn pressed firist time => pause the stop watch timer
 			else if presed second time => make the timer = 0 ;
-			//////////////////////////////////////////////////////////////////*/
+			//////////////////////////////////////////////////////////////////
 		}
 		else
 		{
 			
 		}
-		
+		*/
     }
 }
 ISR(INT1_vect)
